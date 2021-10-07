@@ -1,6 +1,6 @@
 ## Локальный запуск (Linux / macOS):
 
-### Зависимости
+
 
 ##### Local SSL (https://github.com/FiloSottile/mkcert) 
 `mkcert -key-file key.pem -cert-file cert.pem libraries.local && mv -t docker/nginx/local/ssl/ key.pem cert.pem`
@@ -8,6 +8,9 @@
 `127.0.0.1  libraries.local`
 ##### .env
 `cp .env.example .env`
+
+##### Зависимости
+
 * git (`apt install git`)
 * make (`apt install make`)
 * docker / docker-compose (`apt install docker-compose`)
