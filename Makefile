@@ -10,9 +10,9 @@ docker-down:
 docker-build:
 	docker-compose up --build -d
 
-setup-local: perm composer-install npm-install npm-dev storage-link cache
+setup-local: composer-install npm-install npm-dev storage-link cache
 
-setup-prod: perm composer-install-prod npm-install npm-prod storage-link key-generate cache
+setup-prod: composer-install-prod npm-install npm-prod storage-link key-generate cache
 
 storage-link:
 	make exec cmd="php artisan storage:link"
@@ -28,7 +28,6 @@ docker-stop-all:
 
 key-generate:
 	make exec cmd="php artisan key:generate"
-
 
 bash:
 	make exec cmd="bash"
