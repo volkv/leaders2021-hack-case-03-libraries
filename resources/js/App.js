@@ -1,6 +1,5 @@
 import React, {useState, useEffect,Component} from 'react';
 
-
 export default class App extends Component {
     render() {
         return (
