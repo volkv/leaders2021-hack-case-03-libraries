@@ -20,8 +20,8 @@ storage-link:
 git-pull:
 	git pull
 
-update-local: docker-stop-all git-pull perm docker-build composer-update npm-update npm-install npm-prod cache
-update-prod: git-pull perm docker-build composer-update-prod npm-update npm-install npm-prod cache
+update-local: docker-stop-all git-pull docker-build composer-update npm-update npm-install npm-prod cache
+update-prod: git-pull docker-build composer-update-prod npm-update npm-install npm-prod cache
 
 docker-stop-all:
 	docker stop $$(docker ps -q) || true
