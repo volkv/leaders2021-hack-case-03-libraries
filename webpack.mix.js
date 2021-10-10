@@ -18,6 +18,3 @@ mix.js('resources/js/index.js', 'public/js')
 if (!mix.inProduction()) {
     mix.sourceMaps()
 }
-
-
-
