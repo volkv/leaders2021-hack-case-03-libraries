@@ -10,18 +10,24 @@ class Controller extends BaseController
     {
 
 
-
-        $data = file_get_contents(storage_path('datasets_biblioteki/books.jsn'));
-
-        $data = json_decode($data,true);
-        dump(count($data));
-      foreach ($data as $book){
-          dd($book);
-      }
-         return view('index');
+        return view('index');
 
     }
 
 
+    public function test()
+    {
+
+        $data = file_get_contents(storage_path('datasets_biblioteki/books.jsn'));
+
+        $data = json_decode($data, true);
+        dump(count($data));
+        foreach ($data as $book) {
+            if ($book['parentId'] != 0) {
+                dd($book);
+            }
+        }
+        dd(123);
+    }
 
 }

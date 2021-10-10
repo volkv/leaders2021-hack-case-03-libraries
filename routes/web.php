@@ -1,9 +1,10 @@
 <?php
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
-
-Route::get('/', function () {
-    return view('index');
-});
-
 require __DIR__.'/auth.php';
+
+Route::get('/', [Controller::class, 'index']);
+Route::get('/test', [Controller::class, 'test']);
+
+
