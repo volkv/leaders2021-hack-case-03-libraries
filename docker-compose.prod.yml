@@ -40,6 +40,18 @@ services:
     ports:
       - 5432:5432
 
+  meilisearch:
+    image: getmeili/meilisearch:v0.23.0
+    container_name: meilisearch
+    ports:
+      - "7700:7700"
+    volumes:
+      - meilisearch:/data.ms
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+
   redis:
     image: redis:latest
     ports:
@@ -47,4 +59,6 @@ services:
 
 volumes:
   sql:
+    driver: local
+  meilisearch:
     driver: local

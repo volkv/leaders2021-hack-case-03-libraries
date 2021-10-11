@@ -14,12 +14,16 @@ class CreateBooksTable extends Migration
     public function up()
     {
         Schema::create('books', function (Blueprint $table) {
-            $table->unsignedBigInteger('isbn');
+            $table->unsignedBigInteger('id')->primary();
+            $table->unsignedBigInteger('isbn')->index()->nullable();
             $table->unsignedInteger('year')->nullable();
+            $table->text('title');
             $table->text('annotation')->nullable();
-            $table->text('rubric_name')->nullable();
-            $table->text('author_full_name')->nullable();
-            $table->timestamps();
+            $table->unsignedBigInteger('rubric_id')->nullable();
+            $table->foreign('rubric_id')->references('id')->on('rubrics');
+            $table->unsignedBigInteger('author_id');
+            $table->foreign('author_id')->references('id')->on('authors');
+
         });
     }
 
