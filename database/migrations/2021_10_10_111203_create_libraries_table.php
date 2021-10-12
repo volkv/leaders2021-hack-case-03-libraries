@@ -14,8 +14,12 @@ class CreateLibrariesTable extends Migration
     public function up()
     {
         Schema::create('libraries', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+            $table->unsignedBigInteger('id')->primary();
+            $table->string('title');
+            $table->string('address');
+            $table->string('phone');
+            $table->double('lat')->nullable();
+            $table->double('lng')->nullable();
         });
     }
 

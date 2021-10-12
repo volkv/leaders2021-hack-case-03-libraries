@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use App\Models\Author;
 use App\Models\Book;
-
+use App\Models\Library;
 use App\Models\Rubric;
 use Illuminate\Database\Seeder;
 
@@ -13,10 +13,14 @@ class DatabaseSeeder extends Seeder
 
     public function run()
     {
+
         $this->createAuthors();
         $this->createRubrics();
         $this->insertBooks();
+
     }
+
+
 
 
     public function insertBooks()

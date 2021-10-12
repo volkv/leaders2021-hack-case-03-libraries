@@ -29,6 +29,10 @@ use Laravel\Scout\Searchable;
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereRubricId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereUpdatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereYear($value)
+ * @property string $title
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereTitle($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Library[] $library
+ * @property-read int|null $library_count
  */
 class Book extends Model
 {
@@ -37,4 +41,10 @@ class Book extends Model
     protected $guarded = [];
     public $incrementing = false;
     public $timestamps = false;
+
+
+    public function library()
+    {
+        return $this->belongsToMany(Library::class);
+    }
 }

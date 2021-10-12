@@ -34,7 +34,7 @@ services:
     image: postgres:latest
     restart: unless-stopped
     volumes:
-      - sql:/var/lib/postgresql
+      - sql-data:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${DB_DATABASE}
       - POSTGRES_USER=${DB_USERNAME}
@@ -58,8 +58,9 @@ services:
     ports:
       - 63791:6379
 
+
 volumes:
-  sql:
+  sql-data:
     driver: local
   meilisearch:
     driver: local

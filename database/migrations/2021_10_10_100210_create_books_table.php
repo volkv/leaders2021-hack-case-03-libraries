@@ -21,7 +21,7 @@ class CreateBooksTable extends Migration
             $table->text('annotation')->nullable();
             $table->unsignedBigInteger('rubric_id')->nullable();
             $table->foreign('rubric_id')->references('id')->on('rubrics');
-            $table->unsignedBigInteger('author_id');
+            $table->unsignedBigInteger('author_id')->nullable();
             $table->foreign('author_id')->references('id')->on('authors');
 
         });
