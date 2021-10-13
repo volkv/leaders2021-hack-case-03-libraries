@@ -1,4 +1,10 @@
-body {
-    background-color: gray;
+@import "colors.less";
+@import "gutters.less";
+@import "components.less";
+@import "typography.less";
 
+body {
+    background: @bodyBackground;
+    margin: 0; padding: 0;
+    font-family: @defaultFontFamily;
 }

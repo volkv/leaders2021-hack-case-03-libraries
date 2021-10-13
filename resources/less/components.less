@@ -1,0 +1,36 @@
+@import "navigation.less";
+@import "search.less";
+
+.layout-container {
+	background: #fff;
+	display: flex;
+}
+
+.layout-navigation {
+	display: flex;
+	flex-direction: column;
+	flex-basis: 18.75em;
+
+	border-right: 1px @layout-border-color solid;
+	height: 100vh;
+}
+
+.layout-content {
+	display: flex;
+	flex-grow: 1;
+	flex-direction: column;
+}
+
+.header {
+	display: flex;
+	flex-basis: 5rem;
+}
+
+.content {
+	border-top: 1px @layout-border-color solid;
+}
+
+.logo {
+	margin-top: 1em;
+	margin-left: 2em;
+}
