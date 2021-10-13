@@ -32,13 +32,25 @@ services:
     image: postgres:latest
     restart: unless-stopped
     volumes:
-      - sql:/var/lib/postgresql
+      - sql:/var/lib/postgresql/data
     environment:
       - POSTGRES_DB=${DB_DATABASE}
       - POSTGRES_USER=${DB_USERNAME}
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - 5432:5432
+
+  meilisearch:
+    image: getmeili/meilisearch:v0.23.0
+    container_name: meilisearch
+    ports:
+      - "7700:7700"
+    volumes:
+      - meilisearch:/data.ms
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
 
   redis:
     image: redis:latest
@@ -47,4 +59,6 @@ services:
 
 volumes:
   sql:
+    driver: local
+  meilisearch:
     driver: local
