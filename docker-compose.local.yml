@@ -35,6 +35,7 @@ services:
     restart: unless-stopped
     volumes:
       - sql-data:/var/lib/postgresql/data
+      - ./docker/sql:/var/www/docker/sql
     environment:
       - POSTGRES_DB=${DB_DATABASE}
       - POSTGRES_USER=${DB_USERNAME}

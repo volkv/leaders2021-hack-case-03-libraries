@@ -33,6 +33,8 @@ use Laravel\Scout\Searchable;
  * @method static \Illuminate\Database\Eloquent\Builder|Book whereTitle($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Library[] $library
  * @property-read int|null $library_count
+ * @property string|null $cover_url
+ * @method static \Illuminate\Database\Eloquent\Builder|Book whereCoverUrl($value)
  */
 class Book extends Model
 {

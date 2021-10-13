@@ -17,8 +17,12 @@ class BooksFromMosRU extends Command
 
     public function handle()
     {
-        $part = $this->argument('part');
+        //$this->insertAllBooksIDStoDB();
+        $this->syncWithAPI();
+    }
 
+    public function insertAllBooksIDStoDB()
+    {
         $row = 1;
         $bookIDS = [];
         if (($handle = fopen(storage_path('datasets_biblioteki/datasets_2/circulaton_1.csv'), "r")) !== false) {
@@ -42,23 +46,37 @@ class BooksFromMosRU extends Command
                 ];
                 $states[$array['state']] = isset($states[$array['state']]) ? ++$states[$array['state']] : 1;
 
+                $bookIDS[] = $array['catalogueRecordID'];
 
-                $bookIDS[$array['catalogueRecordID']] = true;
-
+                fclose($handle);
 
             }
 
-            fclose($handle);
+            $bookIDS = array_map(fn($id) => ['id' => $id], array_unique($bookIDS));
 
-            $bookIDS = array_chunk($bookIDS, 20000, preserve_keys: true);
+            foreach (array_chunk($bookIDS, 10000) as $chunk) {
 
+                Book::upsert($chunk, ['id']);
+                echo '|';
+            }
         }
-        $bookIDS = $bookIDS[$part];
+    }
+
+    public function syncWithAPI()
+    {
+
+        $part = $this->argument('part');
+
+        $emptyBooks = Book::whereNull('title')->pluck('id');
+
+        $cnt = $emptyBooks->count();
 
 
-        $cnt = count($bookIDS);
+        $cnt = $emptyBooks->count();
+
+
         $i = 1;
-        foreach ($bookIDS as $bookID => $_) {
+        foreach ($emptyBooks as $bookID) {
 
             $mosRUData = @file_get_contents('https://www.mos.ru/aisearch/abis_frontapi/v2/book/?id='.$bookID);
             $mosRUData = json_decode($mosRUData, true);
@@ -79,6 +97,10 @@ class BooksFromMosRU extends Command
                     $year = $item['value'];
                 } elseif ($item['title'] == 'ISBN') {
                     $isbn = preg_replace('/[^0-9]+/', '', $item['value']);
+
+                    if ($isbn > 10785979101101) {
+                        $isbn = null;
+                    }
                 }
             }
 
@@ -97,7 +119,7 @@ class BooksFromMosRU extends Command
                 'title' => $mosRUData['bookInfo']['title'],
                 'rubric_id' => $rubric?->id,
                 'author_id' => $author?->id,
-                'isbn' => $isbn,
+                'isbn' => $isbn ?: null,
             ];
 
             Book::upsert($data, ['id']);
@@ -106,8 +128,6 @@ class BooksFromMosRU extends Command
             echo $i.' / '.$cnt.' '.$mosRUData['bookInfo']['title'].PHP_EOL;
             $i++;
         }
-
-
     }
 
     public function syncLibraries(array $data, $bookID)
@@ -132,8 +152,6 @@ class BooksFromMosRU extends Command
 
         }
 
-
     }
-
 
 }
