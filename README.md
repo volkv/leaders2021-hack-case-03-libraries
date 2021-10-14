@@ -18,9 +18,14 @@
 * `make docker-build`
 * `make setup-local`
 
+### Очистка данных и перенос в PostreSQL
+
+*Необходимые файлы*
+`storage/datasets_biblioteki/datasets_2/circulaton_{1-16}.csv`
+`storage/datasets_biblioteki/books.jsn`
+
+`make seed` - создать справочники и перенести датасет в БД
 ### Использование
 
 `make npm-watch` - сборка фронта в режиме watch
 `make cache` - очистка кэша приложения
-
-`make seed` - создать справочники и перенести датасет в БД (файлы датасета должны находиться в `storage/datasets_biblioteki`)
