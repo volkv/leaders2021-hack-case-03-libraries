@@ -17,8 +17,9 @@ class CreateBooksTable extends Migration
             $table->unsignedBigInteger('id')->primary();
             $table->unsignedBigInteger('isbn')->index()->nullable();
             $table->unsignedInteger('year')->nullable();
-            $table->text('title');
+            $table->text('title')->nullable();
             $table->text('annotation')->nullable();
+            $table->text('cover_url')->nullable();
             $table->unsignedBigInteger('rubric_id')->nullable();
             $table->foreign('rubric_id')->references('id')->on('rubrics');
             $table->unsignedBigInteger('author_id')->nullable();

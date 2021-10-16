@@ -32,6 +32,15 @@ key-generate:
 bash:
 	make exec cmd="bash"
 
+bash-sql:
+	docker-compose exec -u root sql bash
+
+backup-sql:
+	docker-compose exec -u root sql pg_dump -U root -f "/var/www/docker/sql/backup.sql" knigi
+
+restore-sql:
+	docker-compose exec -u root sql psql -d knigi -f "/var/www/docker/sql/backup.sql"
+
 npm-dev:
 	make exec cmd="npm run dev"
 

@@ -15,7 +15,10 @@ class CreateUserBookHistoriesTable extends Migration
     {
         Schema::create('user_book_histories', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->unsignedBigInteger('book_id')->nullable()->index();
+            $table->foreign('book_id')->references('id')->on('books');
+            $table->unsignedBigInteger('user_id')->index();
+            $table->index(['book_id','user_id']);
         });
     }
 
