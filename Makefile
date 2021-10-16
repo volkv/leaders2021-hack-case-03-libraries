@@ -36,10 +36,10 @@ bash-sql:
 	docker-compose exec -u root sql bash
 
 backup-sql:
-	docker-compose exec -u root sql pg_dump -U root -f "/var/www/docker/sql/backup.sql" knigi
+	docker-compose exec -u root sql pg_dump -U root -F c -b -v -f "/var/www/docker/sql/backup" knigi
 
 restore-sql:
-	docker-compose exec -u root sql psql -d knigi -f "/var/www/docker/sql/backup.sql"
+	docker-compose exec -u root sql psql -d knigi -f "/var/www/docker/sql/backup"
 
 npm-dev:
 	make exec cmd="npm run dev"

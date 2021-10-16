@@ -10,7 +10,7 @@ class Controller extends BaseController
     public function getRecomendations($userID)
     {
 
-       $books= \DB::select("select b.id, b.title, count(*) cnt, prcnt from user_book_histories final inner join books b on b.id = final.book_id inner join (
+        $books = \DB::select("select b.id, b.title, count(*) cnt, prcnt from user_book_histories final inner join books b on b.id = final.book_id inner join (
 
 select ubh.user_id,
 
@@ -30,22 +30,19 @@ group by b.id, b.title, prcnt
 order by cnt desc, prcnt desc");
 
 
-       $json = [];
+        $json = [];
 
-       foreach ($books as $book){
-           $json[] =  [
-               'id'=>$book->id,
-               'title'=>$book->title,
-               'cnt'=>$book->cnt,
-               'prcnt'=>$book->prcnt,
-           ];
-       }
+        foreach ($books as $book) {
+            $json[] = [
+                'id' => $book->id,
+                'title' => $book->title,
+                'cnt' => $book->cnt,
+                'prcnt' => $book->prcnt,
+            ];
+        }
 
-      return response()->json($json);
+        return response()->json($json);
 
     }
-
-
-
 
 }

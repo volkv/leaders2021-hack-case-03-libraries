@@ -35,19 +35,30 @@ use Laravel\Scout\Searchable;
  * @property-read int|null $library_count
  * @property string|null $cover_url
  * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereCoverUrl($value)
- * @property int $book_unique_id
- * @property-read \App\Models\BookUnique $uniqueBook
- * @method static \Illuminate\Database\Eloquent\Builder|Book whereBookUniqueId($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Book[] $book
+ * @property-read int|null $book_count
+ * @property string $unique-title
+ * @property bool $is_book_jsn
+ * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereIsBookJsn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereUniqueTitle($value)
  */
-class Book extends Model
+class BookUnique extends Model
 {
+    use HasFactory, Searchable;
 
     protected $guarded = [];
-    public $incrementing = false;
+
     public $timestamps = false;
 
-    public function uniqueBook()
+
+    public function library()
     {
-        return $this->belongsTo(BookUnique::class);
+        return $this->belongsToMany(Library::class);
     }
+
+    public function book() {
+        return $this->hasMany(Book::class);
+    }
+
+
 }

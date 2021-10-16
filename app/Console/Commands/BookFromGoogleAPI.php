@@ -3,7 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Author;
-use App\Models\Book;
+use App\Models\BookUnique;
 use App\Models\Library;
 use App\Models\Rubric;
 use Illuminate\Console\Command;

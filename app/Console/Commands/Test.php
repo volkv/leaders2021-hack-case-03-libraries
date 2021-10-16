@@ -2,7 +2,12 @@
 
 namespace App\Console\Commands;
 
+
+use App\Helpers\BookHelper;
+use App\Models\Book;
+use App\Models\BookUnique;
 use Illuminate\Console\Command;
+use JsonMachine\JsonMachine;
 
 class Test extends Command
 {
@@ -11,9 +16,11 @@ class Test extends Command
     public function handle()
     {
 
-  $usersForTest = \DB::select('select user_id, count(*) cnt from user_book_histories where user_id < 105
-group by user_id having count(*) > 50');
 
+
+        foreach (BookUnique::where('title','like','%гарри поттер%')->get() as $item){
+         dump(BookHelper::cleanTitle($item->title));
+        }
 
 
     }

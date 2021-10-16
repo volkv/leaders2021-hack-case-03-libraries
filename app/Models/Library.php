@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string $phone
  * @property float $lat
  * @property float $lng
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Book[] $books
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BookUnique[] $books
  * @property-read int|null $books_count
  * @method static \Illuminate\Database\Eloquent\Builder|Library whereAddress($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Library whereLat($value)
@@ -41,6 +41,6 @@ class Library extends Model
 
     public function books()
     {
-        return $this->belongsToMany(Book::class)->withPivot(['count','available']);
+        return $this->belongsToMany(BookUnique::class)->withPivot(['count','available']);
     }
 }

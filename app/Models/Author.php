@@ -26,6 +26,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Author whereInitials($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Author whereNames($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Author whereSurname($value)
+ * @property string $simple_name
+ * @method static \Illuminate\Database\Eloquent\Builder|Author whereSimpleName($value)
  */
 class Author extends Model
 {

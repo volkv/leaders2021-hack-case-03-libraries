@@ -15,15 +15,9 @@ class CreateBooksTable extends Migration
     {
         Schema::create('books', function (Blueprint $table) {
             $table->unsignedBigInteger('id')->primary();
-            $table->unsignedBigInteger('isbn')->index()->nullable();
-            $table->unsignedInteger('year')->nullable();
-            $table->text('title')->nullable();
-            $table->text('annotation')->nullable();
-            $table->text('cover_url')->nullable();
-            $table->unsignedBigInteger('rubric_id')->nullable();
-            $table->foreign('rubric_id')->references('id')->on('rubrics');
-            $table->unsignedBigInteger('author_id')->nullable();
-            $table->foreign('author_id')->references('id')->on('authors');
+            $table->unsignedBigInteger('book_unique_id')->nullable();
+            $table->foreign('book_unique_id')->references('id')->on('book_uniques');
+            $table->unique(['id','book_unique_id']);
 
         });
     }
