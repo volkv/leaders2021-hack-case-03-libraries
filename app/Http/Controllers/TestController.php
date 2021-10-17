@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\BookHelper;
 use App\Models\BookUnique;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -12,46 +13,25 @@ class TestController extends BaseController
     {
 
 
-        $row = 1;
-        $states = [];
-        if (($handle = fopen(storage_path('datasets_biblioteki/datasets_2/siglas.csv'), "r")) !== false) {
-            while (($data = fgetcsv($handle, separator: ';')) !== false) {
+        foreach (\DB::select('select distinct user_id from user_book_histories where user_id < 104') as $user){
+            $userID = $user->user_id;
 
-                $row++;
-                if ($row == 2) {
-                    continue;
-                }
+            $userBooks = \DB::select("select bu.title from user_book_histories inner join book_uniques bu on bu.id = user_book_histories.book_id where user_id = $userID");
 
+            echo  '<h1>USER#'.$userID.'</h1>';
 
-                $data = array_map(fn($item) => iconv("Windows-1251", "UTF-8", $item), $data);
-dd($data);
-
-                $array = [
-                    'circulationID' => $data[0],
-                    'catalogueRecordID' => $data[1],
-                    'barcode' => $data[2],
-                    'startDate' => $data[3],
-                    'finishDate' => $data[4],
-                    'readerID' => $data[5],
-                    'bookpointID' => $data[6],
-                    'state' => $data[7],
-                ];
-
-                $states[$array['state']] = isset($states[$array['state']]) ? ++$states[$array['state']] : 1;
-              $mosRUdata =  file_get_contents('https://www.mos.ru/aisearch/abis_frontapi/v2/book/?id='.$array['catalogueRecordID']);
-                $mosRUdata = json_decode($mosRUdata, true);
-
-          dump($mosRUdata['bookInfo']);
-                if ($row > 1000) {
-                    break;
-                }
-
-
+            foreach ($userBooks as $book){
+                echo $book->title . '<br>';
             }
+            echo  '<br><hr><br>';
 
-            fclose($handle);
-            dd($states);
+            foreach (BookHelper::getRecommendationsForUserID($userID) as $book) {
+                echo $book->title . '<br>';;
+            }
+            echo  '<br><hr><br>';
         }
+        dd(123);
+
 
     }
 

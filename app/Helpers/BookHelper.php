@@ -5,6 +5,41 @@ namespace App\Helpers;
 class BookHelper
 {
 
+
+    static function getRecommendationsForUserID(int $userID) : array {
+
+        return \DB::select("select  books.title, books.id, avg(factor) * count(*) avg_factor,  count(*) cnt
+from user_book_histories common_books
+         inner join
+
+     (select sosedi_history.user_id,
+             (select count(*) from user_book_histories where user_id = $userID) user_cnt,  (select count(*) from user_book_histories where user_id = sosedi_history.user_id) all_count,
+             count(*)                                                                          common_cnt,
+
+             (count(*)::float  /  (select count(*) from user_book_histories where user_id = sosedi_history.user_id)::float) * 100 + (count(*) / (select count(*)::float from user_book_histories where user_id = $userID)::float * 100)   factor
+
+      from user_book_histories user_history
+               inner join user_book_histories sosedi_history on sosedi_history.book_id = user_history.book_id
+      where user_history.user_id = $userID
+        and sosedi_history.user_id != $userID and (select count(*) from user_book_histories where user_id = sosedi_history.user_id) > 10
+        and (select count(*) from user_book_histories where user_id = sosedi_history.user_id)
+          < ((select count(*) from user_book_histories where user_id = $userID)*3)
+
+      group by sosedi_history.user_id
+      having (select count(*) from user_book_histories where user_id = sosedi_history.user_id) != count(*)
+      order by factor desc
+      limit 10) sosedi on common_books.user_id = sosedi.user_id
+
+         inner join book_uniques books on books.id = common_books.book_id
+where book_id not in (select book_id from user_book_histories where user_id = $userID)
+group by books.id, books.title
+order by avg_factor desc, cnt, books.id
+limit 5
+");
+
+
+    }
+
     static function cleanTitle(string $title){
 
 
