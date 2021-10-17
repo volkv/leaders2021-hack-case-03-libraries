@@ -31,7 +31,7 @@ from user_book_histories common_books
       limit 10) sosedi on common_books.user_id = sosedi.user_id
 
          inner join book_uniques books on books.id = common_books.book_id
-where book_id not in (select book_id from user_book_histories where user_id = $userID)
+where book_id not in (select book_id from user_book_histories where user_id = $userID) and books.is_book_jsn = true
 group by books.id, books.title
 order by avg_factor desc, cnt, books.id
 limit 5
