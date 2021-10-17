@@ -42,6 +42,7 @@ use Laravel\Scout\Searchable;
  * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereIsBookJsn($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereUniqueTitle($value)
  * @property string $unique_title
+ * @property-read \App\Models\Author|null $author
  */
 class BookUnique extends Model
 {
@@ -50,15 +51,42 @@ class BookUnique extends Model
     protected $guarded = [];
 
     public $timestamps = false;
+    protected $appends = ['author_name'];
 
 
+    public function getAuthorNameAttribute()
+    {
+        return $this->author?->full_name??null;
+    }
     public function library()
     {
         return $this->belongsToMany(Library::class);
     }
 
-    public function book() {
+    public function book()
+    {
         return $this->hasMany(Book::class);
+    }
+
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
+    }
+
+
+    public function toSearchableArray()
+    {
+        if ($this->author) {
+            $title = $this->title.' '.$this->author->full_name;
+        } else {
+            $title = $this->title;
+        }
+
+
+        return [
+            'id' => $this->id,
+            'name' => $title,
+        ];
     }
 
 

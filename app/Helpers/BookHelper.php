@@ -8,7 +8,7 @@ class BookHelper
 
     static function getRecommendationsForUserID(int $userID) : array {
 
-        return \DB::select("select  books.title, books.id, avg(factor) * count(*) avg_factor,  count(*) cnt
+        return \DB::select("select  books.title, books.id, (select count(*) from user_book_histories where user_book_histories.book_id = books.id) book_popularity, avg(factor) * count(*) avg_factor,  count(*) cnt
 from user_book_histories common_books
          inner join
 
@@ -33,9 +33,8 @@ from user_book_histories common_books
          inner join book_uniques books on books.id = common_books.book_id
 where book_id not in (select book_id from user_book_histories where user_id = $userID) and books.is_book_jsn = true
 group by books.id, books.title
-order by avg_factor desc, cnt, books.id
-limit 5
-");
+order by avg_factor desc, book_popularity desc, books.id
+limit 50");
 
 
     }
