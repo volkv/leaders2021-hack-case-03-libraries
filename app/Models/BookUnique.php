@@ -41,6 +41,7 @@ use Laravel\Scout\Searchable;
  * @property bool $is_book_jsn
  * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereIsBookJsn($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereUniqueTitle($value)
+ * @property string $unique_title
  */
 class BookUnique extends Model
 {

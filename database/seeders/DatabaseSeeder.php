@@ -13,42 +13,70 @@ use JsonMachine\JsonMachine;
 class DatabaseSeeder extends Seeder
 {
 
-
-    // add all books
-    // add circ field to books_unique
-    // add circ
-    // remove redundant books (no circ field)
-    // remove annotations
-    // del circ field
-
     static $uniqueBooks = [];
     static $rubricsCache = [];
     static $authorsCache = [];
+    static $uniqueBooksCache = [];
     static array $existingBookIDSCache = [];
 
 
     public function run()
     {
-      //  $this->insertBooksIDSFromCirculations();
+        // $this->insertBooksIDSFromCirculations();
 
-        self::$existingBookIDSCache = Book::pluck('id', 'id')->toArray();
+        //  self::$existingBookIDSCache = Book::pluck('id', 'id')->toArray();
+        //  self::$uniqueBooksCache = BookUnique::pluck('id', 'unique_title')->toArray();
 
-        self::$rubricsCache = Rubric::pluck('id', 'name')->toArray();
-        self::$authorsCache = Author::pluck('id', 'simple_name')->toArray();
+        //  self::$rubricsCache = Rubric::pluck('id', 'name')->toArray();
+        //  self::$authorsCache = Author::pluck('id', 'simple_name')->toArray();
 
-        $this->insertBooks();
+        //   $this->insertBooks();
 
-        $this->insertAllBooks();
+        //  $this->insertAllBooks();
+
+        // self::$existingBookIDSCache = Book::pluck('book_unique_id', 'id')->toArray();
+        //  $this->insertCirculations();
+
+        //  self::$existingBookIDSCache = Book::pluck('id', 'id')->toArray();
+
+        // $this->syncNonExistingBooksWithAPI();
+
+        $this->insertControlCirculations();
 
 
-        //    $this->insertCirculations();
-//        $this->insertControlCirculations();
+    }
 
-        //  $this->syncWithAPI();
+
+    public function syncNonExistingBooksWithAPI()
+    {
+
+
+        $booksWithNoUnique = Book::pluck('book_unique_id', 'id')->toArray();
+
+        $uniqueBooks = [];
+        foreach (Helper::CONTROL_CIRCULATIONS as $book) {
+            $bookID = array_key_first($book);
+            if (!isset($booksWithNoUnique[$bookID])) {
+                $uniqueBooks[$bookID] = true;
+
+            }
+        }
+        foreach ($uniqueBooks as $bookID => $uniqueBook) {
+
+            $this->syncWithAPI($bookID);
+        }
+
+
     }
 
     public function insertBooksIDSFromCirculations()
     {
+
+        foreach (Helper::CONTROL_CIRCULATIONS as $book) {
+            $bookID = array_key_first($book);
+
+            Book::insertOrIgnore(['id' => $bookID]);
+        }
 
         foreach (range(1, 16) as $id) {
 
@@ -91,11 +119,21 @@ class DatabaseSeeder extends Seeder
 
     public function insertControlCirculations()
     {
+
+        $books = Book::pluck('book_unique_id', 'id')->toArray();
+
         $circulations = Helper::CONTROL_CIRCULATIONS;
+        $array = [];
+        foreach ($circulations as $book) {
 
-        $circulations = array_map(fn($array) => ['book_id' => array_key_last($array), 'user_id' => $array[array_key_last($array)]], $circulations);
+            $bookID = $books[array_key_first($book)];
+            $userID = $book[array_key_first($book)];
+            $array["$bookID-$userID"] = ['user_id' => $userID, 'book_id' => $bookID];
+        }
 
-        \DB::table('user_book_histories')->upsert($circulations, ['id']);
+
+        \DB::table('user_book_histories')->upsert($array, ['book_id', 'user_id']);
+
 
     }
 
@@ -110,7 +148,7 @@ class DatabaseSeeder extends Seeder
             return;
         }
 
-        $year = $isbn = null;
+        $rubricName = $authorName = $year = $isbn = null;
 
         foreach ($mosRUData['bookInfo']['items'] as $item) {
             if ($item['title'] == 'Автор') {
@@ -134,14 +172,15 @@ class DatabaseSeeder extends Seeder
             'year' => $year,
             'title' => $mosRUData['bookInfo']['title'],
             'isbn' => $isbn ?: null,
-            'is_book_jsn' => true,
+            'author_fullName' => $authorName ?: null,
+            'rubric_name' => $rubricName ?: null,
         ];
 
 
-        $this->proceedBook($data);
+        $this->proceedBook($data, true);
 
 
-        echo $mosRUData['bookInfo']['title'].PHP_EOL;
+        echo $bookID.' '.$mosRUData['bookInfo']['title'].PHP_EOL;
 
 
     }
@@ -168,15 +207,15 @@ class DatabaseSeeder extends Seeder
 
             if (!$authorID = (self::$authorsCache[$authorSimpleName] ?? null)) {
 
-                $authorSimpleName = explode(' ',BookHelper::cleanTitle($book['author_fullName']))[0] ;
+                $authorSimpleName = explode(' ', BookHelper::cleanTitle($book['author_fullName']))[0];
 
                 $data = [
 
-                    'surname' => $book['author_surname'],
-                    'names' => $book['author_names'],
-                    'initials' => $book['author_initials'],
+                    'surname' => $book['author_surname'] ?? null,
+                    'names' => $book['author_names'] ?? null,
+                    'initials' => $book['author_initials'] ?? null,
                     'full_name' => $book['author_fullName'],
-                    'full_name_alt' => $book['author_fullNameAlt'],
+                    'full_name_alt' => $book['author_fullNameAlt'] ?? null,
                     'simple_name' => $authorSimpleName,
 
                 ];
@@ -195,9 +234,9 @@ class DatabaseSeeder extends Seeder
         $isbn = (int) $isbn ?: null;
 
 
-        if ($book['title_orig']) {
+        if ($book['title_orig'] ?? null) {
             $titleAttribute = $book['title_orig'];
-        } elseif ($book['parentTitle']) {
+        } elseif ($book['parentTitle'] ?? null) {
             $titleAttribute = $book['parentTitle'];
         } else {
             $titleAttribute = $book['title'];
@@ -227,7 +266,7 @@ class DatabaseSeeder extends Seeder
             'rubric_id' => $rubricID,
             'author_id' => $authorID,
             'is_book_jsn' => $isBooksJSN,
-            'unique-title' => $uniqueTitle,
+            'unique_title' => $uniqueTitle,
         ];
 
         $this->upsertBook($data, $uniqueTitle);
@@ -241,16 +280,22 @@ class DatabaseSeeder extends Seeder
         $dataWithoutID = $data;
         unset($dataWithoutID['id']);
 
-        $uniqueBook = BookUnique::where('unique-title', $uniqueTitle)->first() ?? BookUnique::create($dataWithoutID);
+
+        if (!$uniqueBookID = self::$uniqueBooksCache[$uniqueTitle] ?? null) {
+
+            $uniqueBook = BookUnique::create($dataWithoutID);
+            self::$uniqueBooksCache[$uniqueBook->unique_title] = $uniqueBook->id;
+            $uniqueBookID = $uniqueBook->id;
+
+        }
 
 
-        Book::upsert(['id' => $data['id'], 'book_unique_id' => $uniqueBook->id], ['id'], ['book_unique_id']);
+        Book::upsert(['id' => $data['id'], 'book_unique_id' => $uniqueBookID], ['id'], ['book_unique_id']);
 
     }
 
     public function insertCirculations()
     {
-
 
         foreach (range(1, 16) as $id) {
             echo "Circulation: $id".PHP_EOL;
@@ -266,7 +311,7 @@ class DatabaseSeeder extends Seeder
         $progress = $proceeded = $cnt = 0;
 
         $books = $this->getBooksJSNFULL();
-        $start = true;
+        $start = false;
 
         foreach ($books as $book) {
 
@@ -285,7 +330,7 @@ class DatabaseSeeder extends Seeder
             if ($cnt % 1000 == 0) {
                 $currentProgress = intval($books->getPosition() / $fileSize * 100);
 
-                if ($currentProgress >= 12) {
+                if ($currentProgress >= 5) {
                     $start = true;
                 }
 
@@ -320,7 +365,6 @@ class DatabaseSeeder extends Seeder
 
         $userBooks = [];
 
-        $shitBooks = [];
         if (($handle = fopen($filePath, "r")) !== false) {
             while (($data = fgetcsv($handle, separator: ';')) !== false) {
                 $row++;
@@ -331,27 +375,24 @@ class DatabaseSeeder extends Seeder
 
                 $data = array_map(fn($item) => iconv("Windows-1251", "UTF-8", $item), $data);
 
-                if (!isset(self::$existingBookIDSCache[$data[1]])) {
-
-                    $shitBooks[$data[1]] = true;
+                if (!$uniqueID = (self::$existingBookIDSCache[$data[1]] ?? null)) {
+                    continue;
                 }
-                continue;
 
-                $userBooks[] = ['book_id' => $uniqueID, 'user_id' => $data[5]];
+                $userBooks["$uniqueID-$data[5]"] = ['book_id' => $uniqueID, 'user_id' => $data[5]];
 
             }
-
 
         }
 
         fclose($handle);
 
-        dump(count($shitBooks));
-//        foreach (array_chunk($userBooks, 10000) as $chunk) {
-//
-//            \DB::table('user_book_histories')->upsert($chunk, ['id']);
-//            echo '|';
-//        }
+
+        foreach (array_chunk($userBooks, 10000) as $chunk) {
+
+            \DB::table('user_book_histories')->upsert($chunk, ['user_id', 'book_id']);
+            echo '|';
+        }
 
     }
 

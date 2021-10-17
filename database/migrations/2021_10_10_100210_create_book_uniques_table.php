@@ -24,9 +24,8 @@ class CreateBookUniquesTable extends Migration
             $table->foreign('rubric_id')->references('id')->on('rubrics');
             $table->unsignedBigInteger('author_id')->nullable();
             $table->foreign('author_id')->references('id')->on('authors');
-            $table->text('unique-title')->unique();
+            $table->text('unique_title')->unique();
             $table->boolean('is_book_jsn')->default(0);
-            $table->unique(['title','author_id']);
 
         });
     }
