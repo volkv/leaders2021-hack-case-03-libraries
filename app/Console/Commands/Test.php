@@ -20,7 +20,7 @@ class Test extends Command
 
         foreach (BookUnique::where('is_book_jsn', true)->whereNull('cover_url')->get() as $book) {
             $this->updateCover($book);
-            sleep(20);
+            sleep(10);
         }
 
 
