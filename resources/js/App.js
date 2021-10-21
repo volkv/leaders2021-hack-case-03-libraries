@@ -16,10 +16,10 @@ const App = () => {
         <Provider store={store}>
             <Router>
                 <LayoutContainer>
-                    {/*<LayoutNavigation>
+                    <LayoutNavigation>
                         <Logo />
                         <Navigation />
-                    </LayoutNavigation>*/}
+                    </LayoutNavigation>
                     <LayoutContent>
                         <Header />
                         <Content>

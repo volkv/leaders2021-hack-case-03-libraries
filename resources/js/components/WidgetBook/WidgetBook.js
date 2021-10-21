@@ -1,12 +1,15 @@
 import React from 'react';
 import BookImage from './BookImage';
 
-const WidgetBook = () => {
+const WidgetBook = ({
+	title,
+	author
+}) => {
 	return (
 		<div className='book'>
 			<BookImage />
-			<span className=''>book title</span>
-			<span className=''>author</span>
+			<span className='title'>{ title }</span>
+			<span className='author'>{ author }</span>
 		</div>
 	);
 };
