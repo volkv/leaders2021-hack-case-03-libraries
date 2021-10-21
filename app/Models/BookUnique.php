@@ -43,6 +43,7 @@ use Laravel\Scout\Searchable;
  * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereUniqueTitle($value)
  * @property string $unique_title
  * @property-read \App\Models\Author|null $author
+ * @property-read mixed $author_name
  */
 class BookUnique extends Model
 {
