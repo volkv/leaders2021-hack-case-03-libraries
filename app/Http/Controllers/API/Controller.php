@@ -4,25 +4,21 @@ namespace App\Http\Controllers\API;
 
 
 use App\Helpers\BookHelper;
-use Database\Seeders\Helper;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 
 class Controller extends BaseController
 {
-    public function getRecomendations($userID)
+    public function getRecommendations($userID): JsonResponse
     {
 
 
-          $recommendations = BookHelper::getRecommendationsForUserID($userID);
+        $recommendations = BookHelper::getRecommendationsForUserID($userID);
         $json = [];
 
         foreach ($recommendations as $book) {
-            $json[] = [
-                'id' => $book->id,
-                'title' => $book->title,
-                'cnt' => $book->cnt,
-                'factor' => $book->avg_factor,
-            ];
+
+            $json[] = (array)$book;
         }
 
         return response()->json($json);

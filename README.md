@@ -13,6 +13,9 @@
 * make (`apt install make`)
 * docker / docker-compose (`apt install docker-compose`)
 
+###
+
+`git clone git@github.com:volkv/leaders2021-hack-case-03-libraries.git`
 ### Сборка
 
 * `make docker-build`
