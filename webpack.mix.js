@@ -15,6 +15,9 @@ mix.js('resources/js/index.js', 'public/js')
     .react()
     .version()
 
+mix.js('resources/js/swagger.js', 'public/js')
+    .less('resources/less/swagger.less', 'public/css')
+
 if (!mix.inProduction()) {
     mix.sourceMaps()
 }

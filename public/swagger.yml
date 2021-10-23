@@ -1,0 +1,52 @@
+swagger: "2.0"
+info:
+  title: API рекомендательной модели для mos.ru/knigi.
+  description: Команда Киборги
+  version: 1.0.0
+
+basePath: /api/v1
+
+paths:
+  /recs_for_user_id/{userId}:
+    get:
+      summary: Рекомендации книг для заданного userId
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          type: integer
+          minimum: 1
+          description: ID пользователя.
+      responses:
+        200:
+          description: Массив книг.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Book"
+        404:
+          description: Пользователь с заданным ID не найден
+        default:
+          description: Неизвестная ошибка
+definitions:
+  Book:
+    type: "object"
+    properties:
+      id:
+        type: integer
+        example: 4
+      title:
+        type: string
+        example: Бесы
+      cover_url:
+        type: string
+        example: https://cv5.litres.ru/pub/c/elektronnaya-kniga/cover_415/27351958-fredrik-bakman-babushka-velela-klanyatsya-i-peredat-chto-prosit-proscheniy.jpg
+      book_popularity:
+        type: integer
+        example: 1200
+      score:
+        type: number
+        example: 99
+      neighbours_cnt:
+        type: integer
+        example: 5

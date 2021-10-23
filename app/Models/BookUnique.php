@@ -53,12 +53,15 @@ class BookUnique extends Model
 
     public $timestamps = false;
     protected $appends = ['author_name'];
-
+    protected $hidden = ['id','annotation','unique_title','rubric_id','author_id','author','book'];
 
     public function getAuthorNameAttribute()
     {
         return $this->author?->full_name??null;
     }
+
+
+
     public function library()
     {
         return $this->belongsToMany(Library::class);
@@ -68,6 +71,7 @@ class BookUnique extends Model
     {
         return $this->hasMany(Book::class);
     }
+
 
     public function author()
     {

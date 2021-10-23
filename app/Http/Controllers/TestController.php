@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Helpers\BookHelper;
+use App\Helpers\BookHelperService;
 use App\Models\BookUnique;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -27,7 +27,7 @@ class TestController extends BaseController
             }
             echo '<br><hr><br>';
 
-            foreach (BookHelper::getRecommendationsForUserID($userID) as $book) {
+            foreach (BookHelperService::getRecommendationsForUserID($userID) as $book) {
                 echo $book->title.'<br>';;
             }
             echo '<br><hr><br>';

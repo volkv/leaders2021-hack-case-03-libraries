@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Helpers\BookHelper;
+use App\Helpers\BookHelperService;
 use App\Models\Author;
 use App\Models\Book;
 use App\Models\BookUnique;
@@ -203,11 +203,11 @@ class DatabaseSeeder extends Seeder
             $authorID = null;
         } else {
 
-            $authorSimpleName = explode(' ', BookHelper::cleanTitle($book['author_fullName']))[0];
+            $authorSimpleName = explode(' ', BookHelperService::cleanTitle($book['author_fullName']))[0];
 
             if (!$authorID = (self::$authorsCache[$authorSimpleName] ?? null)) {
 
-                $authorSimpleName = explode(' ', BookHelper::cleanTitle($book['author_fullName']))[0];
+                $authorSimpleName = explode(' ', BookHelperService::cleanTitle($book['author_fullName']))[0];
 
                 $data = [
 
@@ -242,7 +242,7 @@ class DatabaseSeeder extends Seeder
             $titleAttribute = $book['title'];
         }
 
-        $uniqueTitle = BookHelper::cleanTitle($titleAttribute);
+        $uniqueTitle = BookHelperService::cleanTitle($titleAttribute);
 
         if (!$uniqueTitle) {
             $uniqueTitle = mb_strtolower($book['title_orig']);

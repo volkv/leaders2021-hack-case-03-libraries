@@ -34,8 +34,6 @@ class UpdateSearch extends Command
         sleep(5);
 
 
-
-
             $meiliClient->index('books')->updateRankingRules(
                 [
                     "exactness",

@@ -8,4 +8,6 @@ require __DIR__.'/auth.php';
 
 Route::get('/test', [TestController::class, 'test']);
 
+Route::get('/api', [Controller::class, 'apiDocs']);
+
 Route::get('/{path?}', [Controller::class, 'index'])->where('path', '.*')->name('react');
