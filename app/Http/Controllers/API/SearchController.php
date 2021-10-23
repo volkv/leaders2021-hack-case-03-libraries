@@ -14,11 +14,11 @@ class SearchController extends Controller
     public function search(Request $request)
     {
         $request->validate([
-            'search' => 'string',
+            'q' => 'string',
             'limit' => 'nullable|int'
         ]);
 
-        $search = strtolower($request->post('search'));
+        $search = strtolower($request->get('q'));
 
         $results = [];
         foreach (BookUnique::search($search)->get() as $book) {
