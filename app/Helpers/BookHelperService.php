@@ -69,7 +69,7 @@ from user_book_histories common_books
 where common_books.book_id not in (select ubh.book_id from user_book_histories ubh where user_id = $userID) and books.is_book_jsn = true
 group by books.id, books.title, books.cover_url
 order by score desc, book_popularity, books.id
-limit 50");
+limit 10");
 
         $bookModels = BookUnique::whereIn('id', array_column($bookData, 'id'))->get();
         $bookModels = $bookModels->pluck([], 'id')->toArray();
