@@ -12,6 +12,7 @@ export const useRequestedCollection = (url, max, observed) => {
 		if (observed) {
 			setInitial(false);
 			setRequested(false);
+			setItems([]);
 			var st_time = performance.now();
 			fetch(url)
 				.then((response) => {
