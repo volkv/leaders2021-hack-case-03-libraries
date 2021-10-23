@@ -6,8 +6,6 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
 
-
-
 Route::get('/test', [TestController::class, 'test']);
 
 Route::get('/{path?}', [Controller::class, 'index'])->where('path', '.*')->name('react');

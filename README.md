@@ -4,8 +4,7 @@
 `mkcert -key-file key.pem -cert-file cert.pem libraries.local && mv -t docker/nginx/local/ssl/ key.pem cert.pem`
 ##### /etc/hosts
 `127.0.0.1  libraries.local`
-##### .env
-`cp .env.example .env`
+
 
 ##### Зависимости
 
@@ -13,10 +12,15 @@
 * make (`apt install make`)
 * docker / docker-compose (`apt install docker-compose`)
 
-###
+### Git clone
 
 `git clone git@github.com:volkv/leaders2021-hack-case-03-libraries.git`
+`cd leaders2021-hack-case-03-libraries`
+
 ### Сборка
+
+##### .env
+`cp .env.example .env`
 
 * `make docker-build`
 * `make setup-local`
