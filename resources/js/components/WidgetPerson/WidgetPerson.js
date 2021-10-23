@@ -13,7 +13,7 @@ const WidgetPerson = (props) => {
 	const [modal, setModal] = useState(false);
 
 	return ( <>
-		<div className='book' onClick={() => setModal(true)}>
+		<div className='person' onClick={() => setModal(true)}>
 			<PersonImage />
 			<span className='title'>User { user_id }</span>
 			<span className='author'>Всего прочитано: { all_count }</span>
