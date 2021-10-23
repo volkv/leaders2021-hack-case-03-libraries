@@ -38,8 +38,14 @@ bash-sql:
 backup-sql:
 	docker-compose exec -u root sql pg_dump -U root -F c -b -v -f "/var/www/docker/sql/backup" knigi
 
-restore-sql: migrate-rollback
-	docker-compose exec -u root sql pg_restore --clean -U root -F c -d knigi "/var/www/docker/sql/backup"
+restore-sql: dropdb createdb
+	docker-compose exec -u root sql pg_restore -U root -F c -d knigi "/var/www/docker/sql/backup"
+
+dropdb:
+	docker-compose exec -u root sql dropdb knigi
+
+createdb:
+	docker-compose exec -u root sql createdb knigi
 
 npm-dev:
 	make exec cmd="npm run dev"
