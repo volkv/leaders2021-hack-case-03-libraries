@@ -1,3 +1,4 @@
 import Search from './Search';
+import { withRouter } from 'react-router-dom';
 
-export default Search;
+export default withRouter(Search);

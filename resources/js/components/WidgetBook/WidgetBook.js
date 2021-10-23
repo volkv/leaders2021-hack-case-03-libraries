@@ -3,13 +3,14 @@ import BookImage from './BookImage';
 
 const WidgetBook = ({
 	title,
-	author
+	author_name,
+	cover_url
 }) => {
 	return (
 		<div className='book'>
-			<BookImage />
+			<BookImage url={cover_url} />
 			<span className='title'>{ title }</span>
-			<span className='author'>{ author }</span>
+			<span className='author'>{ author_name }</span>
 		</div>
 	);
 };

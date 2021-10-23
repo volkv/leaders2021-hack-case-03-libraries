@@ -9,6 +9,7 @@ import LayoutContainer from './components/LayoutContainer';
 import LayoutContent from './components/LayoutContent';
 import LayoutNavigation from './components/LayoutNavigation';
 import MainScreen from './components/MainScreen';
+import SearchScreen from './components/SearchScreen';
 import store from './store';
 
 const App = () => {
@@ -21,12 +22,20 @@ const App = () => {
                         <Navigation />
                     </LayoutNavigation>
                     <LayoutContent>
-                        <Header />
+                        <Switch>
+                            <Route path='/search/:query'>
+                                <Header />
+                            </Route>
+                            <Route>
+                                <Header />
+                            </Route>
+                        </Switch>
                         <Content>
                             <Switch>
                                 <Route path='/about'>
                                     <span>about</span>
                                 </Route>
+                                <Route path={['/search/:query', '/search']} component={SearchScreen} />
                                 <Route path='/'>
                                     <MainScreen />
                                 </Route>

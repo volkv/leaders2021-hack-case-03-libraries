@@ -1,7 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Logo = () => {
 	return (
+		<Link to="/">
 		<div className='logo'>
 			<svg width="241" height="87" viewBox="0 0 241 87" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
 				<rect width="241" height="87" fill="url(#pattern0)"/>
@@ -13,6 +15,7 @@ const Logo = () => {
 				</defs>
 			</svg>
 		</div>
+		</Link>
 	);
 };
 

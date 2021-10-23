@@ -1,6 +1,7 @@
 @import "navigation.less";
 @import "search.less";
 @import "loader.css";
+@import "modal.less";
 
 .layout-container {
 	background: #fff;
@@ -12,15 +13,15 @@
 	flex-direction: column;
 	flex-basis: 18.75em;
 	flex-shrink: 0;
-
-	border-right: 1px @layout-border-color solid;
-	height: 100vh;
 }
 
 .layout-content {
 	display: flex;
 	flex-grow: 1;
 	flex-direction: column;
+	min-height: 100vh;
+
+	border-left: 1px @layout-border-color solid;
 }
 
 .header {
@@ -68,7 +69,25 @@
 		display: block;
 	}
 
+	img {
+		max-width: 149px;
+	}
+
 	.author {
 		color: @text-label-color;
 	}
+}
+
+.person-image {
+	width: 137px;
+	height: 137px;
+
+	display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #E5E5E5;
+    border-radius: 50%;
+
+    margin-bottom: 1rem;
 }

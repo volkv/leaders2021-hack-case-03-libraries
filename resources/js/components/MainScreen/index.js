@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import WidgetCollection from '../WidgetCollection';
 import RecommendedCollection from '../RecommendedCollection';
+import NeighboursCollection from '../NeighboursCollection';
 
 const MainScreen = () => {
 	const [id, setId] = useState('')
@@ -15,9 +16,8 @@ const MainScreen = () => {
 					<input placeholder='ID читателя' value={id} onChange={changeId} />
 				</div>
 			</div>
-			<RecommendedCollection id={id} />
-			{/*<WidgetCollection title="История" items={[1,2,3,4]} />*/}
-			{/*<WidgetCollection title="Бестселлеры" items={[1,2,3]} />*/}
+			<RecommendedCollection id={id} child='Book' />
+			<NeighboursCollection id={id} child='Person' />
 		</div>
 	);
 };
