@@ -20,13 +20,7 @@ class SearchController extends Controller
 
         $search = strtolower($request->get('q'));
 
-        $results = [];
-        foreach (BookUnique::search($search)->get() as $book) {
-            $results[] = $book->attributesToArray();
-        }
-
-
-        return response()->json(['results' => $results]);
+        return response()->json(['results' => BookUnique::search($search)->get()]);
     }
 
 }

@@ -43,7 +43,7 @@ class Test extends Command
         }
 
         $booksUpserts = array_map(fn($key, $value) => ['id' => $value, 'count' => $key], $booksCounts, array_keys($booksCounts));
-        foreach (array_chunk($booksUpserts,5000) as $chunk){
+        foreach (array_chunk($booksUpserts, 5000) as $chunk) {
             Book::upsert($chunk, ['id'], ['count']);
             echo '|';
         }

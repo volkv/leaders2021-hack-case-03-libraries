@@ -6,9 +6,15 @@ info:
 
 basePath: /api/v1
 
+tags:
+  - name: "rec"
+    description: "Рекоменадции"
+
 paths:
   /recs_for_user_id/{userId}:
     get:
+      tags:
+        - "rec"
       summary: Рекомендации книг для заданного userId
       parameters:
         - in: path
@@ -26,6 +32,49 @@ paths:
               $ref: "#/definitions/Book"
         404:
           description: Пользователь с заданным ID не найден
+        default:
+          description: Неизвестная ошибка
+  /neighbours_for_user_id/{userId}:
+    get:
+      tags:
+        - "rec"
+      summary: Получение ближайших соседей и их книг по userId
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          type: integer
+          minimum: 1
+          description: ID пользователя
+      responses:
+        200:
+          description: Массив пользователей.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/User"
+        404:
+          description: Пользователь с заданным ID не найден
+        default:
+          description: Неизвестная ошибка
+  /search:
+    get:
+      summary: Поиск по книгам
+      parameters:
+        - name: "q"
+          in: "query"
+          description: "Поисковый запрос"
+          required: true
+          type: "string"
+      responses:
+        200:
+          description: Массив книг
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Book"
+        404:
+          description: Ничего не найдено
         default:
           description: Неизвестная ошибка
 definitions:
@@ -50,3 +99,26 @@ definitions:
       neighbours_cnt:
         type: integer
         example: 5
+  User:
+    type: "object"
+    properties:
+      user_id:
+        type: integer
+        example: 4
+      all_count:
+        type: integer
+        example: 12
+      common_cnt:
+        type: integer
+        example: 5
+      factor:
+        type: number
+        example: 12.5
+      common:
+        type: array
+        items:
+          $ref: "#/definitions/Book"
+      diff:
+        type: array
+        items:
+          $ref: "#/definitions/Book"

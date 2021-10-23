@@ -2,10 +2,9 @@
 
 namespace App\Console\Commands;
 
-use App\Http\Controllers\WebApi\SearchController;
-use App\Models\BookUnique;
+
 use Illuminate\Console\Command;
-use Illuminate\Database\Eloquent\Relations\Relation;
+use Log;
 use MeiliSearch\Client;
 
 class UpdateSearch extends Command
@@ -22,7 +21,7 @@ class UpdateSearch extends Command
     {
 
 
-        \Log::channel('jobs')->info('Update Search Started');
+        Log::channel('jobs')->info('Update Search Started');
 
         $meiliClient = resolve(Client::class);
 
@@ -34,31 +33,29 @@ class UpdateSearch extends Command
         sleep(5);
 
 
-            $meiliClient->index('books')->updateRankingRules(
-                [
-                    "exactness",
-                    "words",
-                    "typo",
-                    "proximity",
-                    "attribute",
+        $meiliClient->index('books')->updateRankingRules(
+            [
+                "exactness",
+                "sort:desc",
+                "words",
+                "typo",
+                "proximity",
+                "attribute",
 
-                ]
+            ]
 
-            );
+        );
 
-            $meiliClient->index('books')->updateSearchableAttributes(['name']);
-            $meiliClient->index('books')->updateDisplayedAttributes(['id']);
-
+        $meiliClient->index('books')->updateSearchableAttributes(['name']);
+        $meiliClient->index('books')->updateDisplayedAttributes(['id']);
 
 
         sleep(5);
 
 
-
-            $this->call('scout:import', ['model' =>  "App\Models\BookUnique"]);
-
+        $this->call('scout:import', ['model' => "App\Models\BookUnique"]);
 
 
-        \Log::channel('jobs')->info('Update Search Finished');
+        Log::channel('jobs')->info('Update Search Finished');
     }
 }

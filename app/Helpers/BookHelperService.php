@@ -3,13 +3,14 @@
 namespace App\Helpers;
 
 use App\Models\BookUnique;
+use DB;
 
 class BookHelperService
 {
     static function getNeighboursForUserID(int $userID): array
     {
 
-        $neighbours = \DB::select(self::buildNeighboursSQL($userID));
+        $neighbours = DB::select(self::buildNeighboursSQL($userID));
 
         $userBooks = self::getUserBookIDS($userID);
 
@@ -29,15 +30,36 @@ class BookHelperService
 
     }
 
+    static function buildNeighboursSQL(int $userID): string
+    {
+        return "select sosedi_history.user_id,
+              (select count(*) from user_book_histories where user_id = sosedi_history.user_id) all_count,
+             count(*)                                                                          common_cnt,
+
+             (count(*)::float  /  (select count(*) from user_book_histories where user_id = sosedi_history.user_id)::float) * 100 + (count(*) / (select count(*)::float from user_book_histories where user_id = $userID)::float * 100)   factor
+
+      from user_book_histories user_history
+               inner join user_book_histories sosedi_history on sosedi_history.book_id = user_history.book_id
+      where user_history.user_id = $userID
+        and sosedi_history.user_id != $userID and (select count(*) from user_book_histories where user_id = sosedi_history.user_id) > 10
+        and (select count(*) from user_book_histories where user_id = sosedi_history.user_id)
+          < ((select count(*) from user_book_histories where user_id = $userID)*3)
+
+      group by sosedi_history.user_id
+      having (select count(*) from user_book_histories where user_id = sosedi_history.user_id) != count(*)
+      order by factor desc
+      limit 10";
+    }
+
     static function getUserBookIDS(int $userID): array
     {
-        return \DB::table('user_book_histories')->where('user_id', $userID)->pluck('book_id', 'book_id')->toArray();
+        return DB::table('user_book_histories')->where('user_id', $userID)->pluck('book_id', 'book_id')->toArray();
     }
 
     static function getRecommendationsForUserID(int $userID): array
     {
 
-        $bookData = \DB::select("select books.id, (select count(*) from user_book_histories where user_book_histories.book_id = books.id) book_popularity,
+        $bookData = DB::select("select books.id, (select count(*) from user_book_histories where user_book_histories.book_id = books.id) book_popularity,
        ROUND(CAST(avg(factor) * count(*) AS numeric),2) score,  count(*) neighbours_cnt
 from user_book_histories common_books
          inner join
@@ -62,27 +84,6 @@ limit 50");
         }
 
         return $bookData;
-    }
-
-    static function buildNeighboursSQL(int $userID): string
-    {
-        return "select sosedi_history.user_id,
-              (select count(*) from user_book_histories where user_id = sosedi_history.user_id) all_count,
-             count(*)                                                                          common_cnt,
-
-             (count(*)::float  /  (select count(*) from user_book_histories where user_id = sosedi_history.user_id)::float) * 100 + (count(*) / (select count(*)::float from user_book_histories where user_id = $userID)::float * 100)   factor
-
-      from user_book_histories user_history
-               inner join user_book_histories sosedi_history on sosedi_history.book_id = user_history.book_id
-      where user_history.user_id = $userID
-        and sosedi_history.user_id != $userID and (select count(*) from user_book_histories where user_id = sosedi_history.user_id) > 10
-        and (select count(*) from user_book_histories where user_id = sosedi_history.user_id)
-          < ((select count(*) from user_book_histories where user_id = $userID)*3)
-
-      group by sosedi_history.user_id
-      having (select count(*) from user_book_histories where user_id = sosedi_history.user_id) != count(*)
-      order by factor desc
-      limit 10";
     }
 
     static function cleanTitle(string $title)

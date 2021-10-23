@@ -2,49 +2,53 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Eloquent;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Laravel\Scout\Searchable;
+use Illuminate\Support\Carbon;
 
 /**
  * App\Models\Book
  *
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique newModelQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique newQuery()
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique query()
- * @mixin \Eloquent
+ * @method static Builder|BookUnique newModelQuery()
+ * @method static Builder|BookUnique newQuery()
+ * @method static Builder|BookUnique query()
+ * @mixin Eloquent
  * @property int $id
  * @property int $isbn
  * @property int|null $year
  * @property string|null $annotation
  * @property int $rubric_id
  * @property int $author_id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereAnnotation($value)
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereAuthorId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereCreatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereIsbn($value)
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereRubricId($value)
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereUpdatedAt($value)
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereYear($value)
+ * @property Carbon|null $created_at
+ * @property Carbon|null $updated_at
+ * @method static Builder|BookUnique whereAnnotation($value)
+ * @method static Builder|BookUnique whereAuthorId($value)
+ * @method static Builder|BookUnique whereCreatedAt($value)
+ * @method static Builder|BookUnique whereId($value)
+ * @method static Builder|BookUnique whereIsbn($value)
+ * @method static Builder|BookUnique whereRubricId($value)
+ * @method static Builder|BookUnique whereUpdatedAt($value)
+ * @method static Builder|BookUnique whereYear($value)
  * @property string $title
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereTitle($value)
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Library[] $library
+ * @method static Builder|BookUnique whereTitle($value)
+ * @property-read Collection|Library[] $library
  * @property-read int|null $library_count
  * @property string|null $cover_url
- * @method static \Illuminate\Database\Eloquent\Builder|BookUnique whereCoverUrl($value)
+ * @method static Builder|BookUnique whereCoverUrl($value)
  * @property int $book_unique_id
- * @property-read \App\Models\BookUnique $uniqueBook
- * @method static \Illuminate\Database\Eloquent\Builder|Book whereBookUniqueId($value)
+ * @property-read BookUnique $uniqueBook
+ * @method static Builder|Book whereBookUniqueId($value)
+ * @property int $count
+ * @method static Builder|Book whereCount($value)
  */
 class Book extends Model
 {
 
-    protected $guarded = [];
     public $incrementing = false;
     public $timestamps = false;
+    protected $guarded = [];
 
     public function uniqueBook()
     {
