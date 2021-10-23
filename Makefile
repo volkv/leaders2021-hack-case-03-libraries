@@ -44,6 +44,9 @@ restore-sql: dropdb createdb
 dropdb:
 	docker-compose exec -u root sql dropdb knigi
 
+search:
+	make exec cmd="php artisan c:search"
+
 createdb:
 	docker-compose exec -u root sql createdb knigi
 

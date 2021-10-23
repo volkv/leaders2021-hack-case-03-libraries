@@ -1,10 +1,75 @@
+# Готовое решение
+
+# https://mos-knigi.volkv.com/
+
+## Документация к API
+
+## https://mos-knigi.volkv.com/api
+
+### Список рекомендаций для пользователя
+
+> GET /api/v1/recs_for_user_id/{userId}
+>
+
+### Список ближайших соседей для пользователя
+
+> GET /api/v1/neighbours_for_user_id/{userId}
+
+### Поиск по книгам
+
+> GET /api/v1/search?q={query}
+>
+
+## Функционал веб-интерфейса:
+
+* Выдача рекомендаций по заданному `userID`
+* Поиск ближайших соседей `userID` и отображением их книг (общих и различных)
+* Поиск по всем книгам на сайте
+
+## Техническая реализация:
+
+* Был проведен рефакторинг и очистка данных. Книги с одинаковым содержанием были объединены в абстрактные уникальные книги
+
+<img width="500" src="https://i.imgur.com/SItPqet.png" alt="">
+
+* Использован алгоритм коллаборативной фильтрации на движке PostreSQL. С помощью конструкций Join и вложенных запросов мы смогли добиться высокой
+  производительности.
+* Сосед - читатель со схожим книжным вкусом. Сходство книжного вкуса определяется по кол-ву общих книг и по проценту от общего кол-ва книг соседа.
+* Алгоритм можно описать следующим образом - по списку книг пользователя мы ищем его соседей (пользователей с наибольшим фактором совпадения). Фактор
+  совпадения - это усредненный показатель кол-ва совпадений и процента от общего кол-ва книг соседа. Таким образом, мы получаем 10 ближайших соседей,
+  после чего мы получаем списки их книг и сортируем по взвешенному показателю (`score`), который рассчитывается по тому, сколько раз встречается книга
+  у соседа и по тому, насколько сосед релевантен. Это усреднение позволяет нам избежать ситуации, когда популярная книга часто встречается у далеких
+  соседей. Наша модель в таком случае предложит более редкую книгу, но из списка соседа с более близким вкусом, что, скорее всего будет более
+  релевантно пользователю.
+*
+
+## Stack
+
+* Laravel `8.54`
+* PostgreSQL `14`
+* Nginx `1.21.3`
+* Redis `6.2.6`
+* Meilisearch `0.23.0`
+* React `16.14`
+
+## Технологии
+
+* Docker / Compose
+* Очереди Redis
+* Коллаборативная фильтрация
+* Кэш Redis
+* Планировщик Laravel
+* Meilisearch - современный, эффективный поиск на языке Rust
+
 ## Локальный запуск (Linux / macOS):
 
-##### Local SSL (https://github.com/FiloSottile/mkcert) 
-`mkcert -key-file key.pem -cert-file cert.pem libraries.local && mv -t docker/nginx/local/ssl/ key.pem cert.pem`
-##### /etc/hosts
-`127.0.0.1  libraries.local`
+##### Local SSL (https://github.com/FiloSottile/mkcert) (необязательно)
 
+> `mkcert -key-file key.pem -cert-file cert.pem libraries.local && mv -t docker/nginx/local/ssl/ key.pem cert.pem` - для того, чтобы сайт открывался по https с действительным сертификатом
+
+##### /etc/hosts
+
+> `127.0.0.1  libraries.local` - добавляем наш тестовый локальный домен
 
 ##### Зависимости
 
@@ -14,29 +79,33 @@
 
 ### Git clone
 
-`git clone git@github.com:volkv/leaders2021-hack-case-03-libraries.git`
-`cd leaders2021-hack-case-03-libraries`
+> `git clone git@github.com:volkv/leaders2021-hack-case-03-libraries.git`
 
-### Сборка
+> `cd leaders2021-hack-case-03-libraries`
 
-##### .env
-`cp .env.example .env`
+# Сборка
 
-* `make docker-build`
-* `make setup-local`
+> `cp .env.example .env` - скопировать файл с переменным окружения
 
-### Очистка данных и перенос в PostgreSQL
+> `make docker-build` - сборка Docker контейнеров
 
-*Необходимые файлы*
-`storage/datasets_biblioteki/datasets_2/circulaton_{1-16}.csv`
-`storage/datasets_biblioteki/books.jsn`
+> `make setup-local` - установка зависимостей, сборка фронта
 
-*Либо использовать уже очищенные данные*
-./docker/sql/
-`make restore-sql`
-`make seed` - создать справочники и перенести датасет в БД
+### Восстановление БД PostgreSQL с очищенными данными
+
+> `https://mos-knigi.volkv.com/storage/backup` - скачать дамп PostgreSQL в папку ./docker/sql/
+
+> `make restore-sql` - команда восстановления дампа БД
+
+### Успех. Сервер запущен и доступен по адресу: https://libraries.local:8080
 
 ### Использование
 
-`make npm-watch` - сборка фронта в режиме watch
-`make cache` - очистка кэша приложения
+> `make npm-watch` - сборка фронта в режиме watch
+
+> `make cache` - очистка кэша приложения
+
+> `make search` - принудительно обновить поисковый индекс
+
+
+
