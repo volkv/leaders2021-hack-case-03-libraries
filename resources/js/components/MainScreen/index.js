@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import WidgetCollection from '../WidgetCollection';
 import RecommendedCollection from '../RecommendedCollection';
 import NeighboursCollection from '../NeighboursCollection';
+import HistoryCollection from '../HistoryCollection';
 import Button from '../MagnifierButton';
 
 const MainScreen = () => {
@@ -24,6 +25,7 @@ const MainScreen = () => {
 			<span className='legend label'>ID читателя в пределах от 1 до 103 - пользователи контрольной группы, остальные пользователи из циркуляций</span>
 			<RecommendedCollection id={id} child='Book' />
 			<NeighboursCollection id={id} child='Person' />
+			<HistoryCollection id={id} child='Book' />
 		</div>
 	);
 };
