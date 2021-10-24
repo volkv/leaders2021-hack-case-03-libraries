@@ -4,6 +4,7 @@ namespace App\Helpers;
 
 use App\Models\BookUnique;
 use DB;
+use Illuminate\Support\Collection;
 
 class BookHelperService
 {
@@ -60,7 +61,7 @@ class BookHelperService
         return DB::table('user_book_histories')->where('user_id', $userID)->pluck('book_id', 'book_id')->toArray();
     }
 
-    static function getRecommendationsForUserID(int $userID): array
+    static function getRecommendationsForUserID(int $userID, int $limit = 10): array
     {
 
         $bookData = DB::select("select books.id, (select count(*) from user_book_histories where user_book_histories.book_id = books.id) book_popularity,
@@ -73,12 +74,13 @@ from user_book_histories common_books
 where common_books.book_id not in (select ubh.book_id from user_book_histories ubh where user_id = $userID) and books.is_book_jsn = true
 group by books.id, books.title, books.cover_url
 order by score desc, book_popularity, books.id
-limit 10");
+limit $limit");
 
         $bookModels = BookUnique::whereIn('id', array_column($bookData, 'id'))->get();
         $bookModels = $bookModels->pluck([], 'id')->toArray();
 
         foreach ($bookData as &$bookDatum) {
+
             $bookDatum = (array) $bookDatum;
 
             $modelData = (array) $bookModels[$bookDatum['id']];
@@ -90,5 +92,8 @@ limit 10");
         return $bookData;
     }
 
-
+    static function getUserHistory(int $userID): Collection
+    {
+        return BookUnique::whereIn('id', \DB::table('user_book_histories')->where('user_id', $userID)->pluck('book_id'))->get();
+    }
 }

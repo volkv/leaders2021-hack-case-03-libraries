@@ -80,6 +80,36 @@ paths:
           description: Пользователь с заданным ID не найден
         default:
           description: Неизвестная ошибка
+  /recs_and_history_for_user_id/{userId}:
+    get:
+      tags:
+        - "rec"
+      summary: Рекомендации и история книг для заданного userId
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          type: integer
+          minimum: 1
+          description: ID пользователя.
+      responses:
+        200:
+          description: Массив.
+          schema:
+            type: object
+            properties:
+              recommendations:
+                type: array
+                items:
+                  $ref: "#/definitions/Book"
+              history:
+                type: array
+                items:
+                  $ref: "#/definitions/Book"
+        404:
+          description: Пользователь с заданным ID не найден
+        default:
+          description: Неизвестная ошибка
   /search:
     get:
       summary: Поиск по книгам

@@ -62,6 +62,15 @@ class BookUnique extends Model
     protected $appends = ['author_name'];
     protected $hidden = ['id', 'annotation', 'unique_title', 'rubric_id', 'author_id', 'author', 'book'];
 
+
+    public function toArray()
+    {
+        $data =  parent::toArray();
+        $data['id'] =  $data['book_id'];
+        $data['author'] =  $data['author_name'];
+        return $data;
+    }
+
     public function getAuthorNameAttribute()
     {
         return $this->author?->full_name ?? null;

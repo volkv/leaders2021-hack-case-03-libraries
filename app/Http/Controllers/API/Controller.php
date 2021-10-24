@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\BookHelperService;
 use App\Models\BookUnique;
+use Database\Seeders\Helper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Routing\Controller as BaseController;
 
@@ -16,6 +17,18 @@ class Controller extends BaseController
     {
 
         return response()->json(BookHelperService::getRecommendationsForUserID($userID));
+
+    }
+
+    public function getRecsAndHistory($userID): JsonResponse
+    {
+
+        return response()->json(
+            [
+                'recommendations'=> BookHelperService::getRecommendationsForUserID($userID),
+                'history'=> BookHelperService::getUserHistory($userID)
+                ]
+        );
 
     }
 
@@ -31,8 +44,8 @@ class Controller extends BaseController
     public function getHistory($userID): JsonResponse
     {
 
-        $books = BookUnique::whereIn('id', \DB::table('user_book_histories')->where('user_id', $userID)->pluck('book_id'))->get();
-        return response()->json($books);
+
+        return response()->json(BookHelperService::getUserHistory($userID));
     }
 
 

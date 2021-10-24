@@ -41,6 +41,10 @@
 
 > GET /api/v1/history_for_user_id/{userId}
 
+#### Рекомендации и история книг (endpoint из ТЗ)
+
+> GET /api/v1/recs_and_history_for_user_id/{userId}
+
 #### Поиск по книгам
 
 > GET /api/v1/search?q={query}
@@ -56,7 +60,7 @@
 
 ##### Local SSL (https://github.com/FiloSottile/mkcert) (необязательно)
 
-> `mkcert -key-file key.pem -cert-file cert.pem libraries.local && mv -t docker/nginx/local/ssl/ key.pem cert.pem` - для того, чтобы сайт открывался по https с действительным сертификатом
+> `mkcert -key-file key.pem -cert-file cert.pem libraries.local && mv -t docker/nginx/local/ssl/ key.pem cert.pem` - для того, чтобы сайт открывался по https с действительным сертификатом на локалке
 
 ##### /etc/hosts
 
@@ -82,7 +86,7 @@
 
 > `make setup-local` - установка зависимостей, сборка фронта
 
-### Восстановление БД PostgreSQL с очищенными данными
+### Восстановление дампа БД PostgreSQL с очищенными данными
 
 > `https://mos-knigi.volkv.com/storage/backup` - скачать дамп PostgreSQL в папку ./docker/sql/
 
