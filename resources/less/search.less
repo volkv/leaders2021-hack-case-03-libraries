@@ -7,16 +7,23 @@
 	box-sizing: border-box;
 
 	input {
-		border: none;
+
 		box-sizing: border-box;
 		height: 95%;
 		width: 100%;
 		padding-left: 4rem;
+        border: 1px solid #777;
+        border-radius: 4px;
 	}
 
 	.button {
 		position: absolute;
 		top: 0;
 		left: 0;
+        &:hover {
+            path {
+                fill: red;
+            }
+        }
 	}
 }

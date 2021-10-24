@@ -7,6 +7,11 @@ use DB;
 
 class BookHelperService
 {
+
+
+    const NEIGHBOUR_MIN_BOOK_COUNT = 5;
+    const MAX_NEIGHBOURS_COUNT = 30;
+
     static function getNeighboursForUserID(int $userID): array
     {
 
@@ -41,14 +46,14 @@ class BookHelperService
       from user_book_histories user_history
                inner join user_book_histories sosedi_history on sosedi_history.book_id = user_history.book_id
       where user_history.user_id = $userID
-        and sosedi_history.user_id != $userID and (select count(*) from user_book_histories where user_id = sosedi_history.user_id) > 10
-        and (select count(*) from user_book_histories where user_id = sosedi_history.user_id)
+        and sosedi_history.user_id != $userID and (select count(*) from user_book_histories where user_id = sosedi_history.user_id) > ".self::NEIGHBOUR_MIN_BOOK_COUNT."
+           and (select count(*) from user_book_histories where user_id = sosedi_history.user_id)
           < ((select count(*) from user_book_histories where user_id = $userID)*3)
 
       group by sosedi_history.user_id
       having (select count(*) from user_book_histories where user_id = sosedi_history.user_id) != count(*)
       order by factor desc
-      limit 10";
+      limit ".self::MAX_NEIGHBOURS_COUNT;
     }
 
     static function getUserBookIDS(int $userID): array

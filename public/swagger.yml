@@ -34,6 +34,29 @@ paths:
           description: Пользователь с заданным ID не найден
         default:
           description: Неизвестная ошибка
+  /history_for_user_id/{userId}:
+    get:
+      tags:
+        - "rec"
+      summary: История книг для заданного userId
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          type: integer
+          minimum: 1
+          description: ID пользователя.
+      responses:
+        200:
+          description: Массив книг.
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Book"
+        404:
+          description: Пользователь с заданным ID не найден
+        default:
+          description: Неизвестная ошибка
   /neighbours_for_user_id/{userId}:
     get:
       tags:
@@ -48,11 +71,11 @@ paths:
           description: ID пользователя
       responses:
         200:
-          description: Массив пользователей.
+          description: Массив соседей.
           schema:
             type: array
             items:
-              $ref: "#/definitions/User"
+              $ref: "#/definitions/Neighbour"
         404:
           description: Пользователь с заданным ID не найден
         default:
@@ -99,7 +122,7 @@ definitions:
       neighbours_cnt:
         type: integer
         example: 5
-  User:
+  Neighbour:
     type: "object"
     properties:
       user_id:
