@@ -9,6 +9,7 @@ import LayoutContainer from './components/LayoutContainer';
 import LayoutContent from './components/LayoutContent';
 import LayoutNavigation from './components/LayoutNavigation';
 import MainScreen from './components/MainScreen';
+import PseudoHeader from './components/PseudoHeader';
 import SearchScreen from './components/SearchScreen';
 import store from './store';
 
@@ -16,6 +17,9 @@ const App = () => {
     return (
         <Provider store={store}>
             <Router>
+                <LayoutContainer>
+                    <PseudoHeader />
+                </LayoutContainer>
                 <LayoutContainer>
                     <LayoutNavigation>
                         <Logo />

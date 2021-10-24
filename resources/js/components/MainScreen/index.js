@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import WidgetCollection from '../WidgetCollection';
 import RecommendedCollection from '../RecommendedCollection';
 import NeighboursCollection from '../NeighboursCollection';
+import Button from '../MagnifierButton';
 
 const MainScreen = () => {
 	const [id, setId] = useState('')
@@ -16,6 +17,7 @@ const MainScreen = () => {
 		<div>
 			<div className='header'>
 				<div className='search-container'>
+					<Button />
 					<input placeholder='ID читателя' onBlur={handleCommit} onKeyDown={handleKeyDown}/>
 				</div>
 			</div>
