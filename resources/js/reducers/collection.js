@@ -3,7 +3,7 @@ import { handleActions } from 'redux-actions';
 const initialState = [
 	{
 		id: 'recommend',
-		title: 'Рекоммендованые',
+		title: 'Рекоммендации',
 		items: [
 			1,2,3,4,5
 		],
